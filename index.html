@@ -13,6 +13,11 @@
     border-radius: 8px;
     box-shadow: 0 0 12px rgba(0,0,0,0.1);
   }
+  img.logo {
+    display: block;
+    margin: 0 auto 20px;
+    max-width: 150px;
+  }
   h2 {
     text-align: center;
     color: #333;
@@ -63,102 +68,104 @@
 </head>
 <body>
 
-<h2>Điểm danh sinh viên DNT</h2>
+  <img src="https://upload.wikimedia.org/wikipedia/vi/9/9f/Logo_%C4%90h_Nam_C%E1%BA%A7n_Th%C6%A1.png" alt="Logo Đại học Nam Cần Thơ" class="logo" />
+  
+  <h2>Điểm danh sinh viên DNT</h2>
 
-<form id="attendanceForm">
-  <label for="name">Họ và tên:</label>
-  <input type="text" id="name" required />
+  <form id="attendanceForm">
+    <label for="name">Họ và tên:</label>
+    <input type="text" id="name" required />
 
-  <label for="class">Lớp:</label>
-  <input type="text" id="class" required />
+    <label for="class">Lớp:</label>
+    <input type="text" id="class" required />
 
-  <label for="mssv">Mã số sinh viên:</label>
-  <input type="text" id="mssv" required />
+    <label for="mssv">Mã số sinh viên:</label>
+    <input type="text" id="mssv" required />
 
-  <label for="date">Ngày học:</label>
-  <input type="date" id="date" required />
+    <label for="date">Ngày học:</label>
+    <input type="date" id="date" required />
 
-  <label for="period">Tiết học:</label>
-  <select id="period" required>
-    <option value="">--Chọn tiết học--</option>
-    <option value="1-3">1-3</option>
-    <option value="4-6">4-6</option>
-    <option value="7-9">7-9</option>
-    <option value="10-12">10-12</option>
-  </select>
+    <label for="period">Tiết học:</label>
+    <select id="period" required>
+      <option value="">--Chọn tiết học--</option>
+      <option value="1-3">1-3</option>
+      <option value="4-6">4-6</option>
+      <option value="7-9">7-9</option>
+      <option value="10-12">10-12</option>
+    </select>
 
-  <label for="subject">Môn học:</label>
-  <select id="subject" required>
-    <option value="">--Chọn môn học--</option>
-    <option value="An toàn sinh học">An toàn sinh học</option>
-    <option value="Kiểm soát nhiễm khuẩn">Kiểm soát nhiễm khuẩn</option>
-  </select>
+    <label for="subject">Môn học:</label>
+    <select id="subject" required>
+      <option value="">--Chọn môn học--</option>
+      <option value="An toàn sinh học">An toàn sinh học</option>
+      <option value="Kiểm soát nhiễm khuẩn">Kiểm soát nhiễm khuẩn</option>
+    </select>
 
-  <button type="submit">Gửi điểm danh</button>
-</form>
+    <button type="submit">Gửi điểm danh</button>
+  </form>
 
-<div id="message" class="message"></div>
+  <div id="message" class="message"></div>
 
-<script>
-  const form = document.getElementById('attendanceForm');
-  const messageDiv = document.getElementById('message');
+  <script>
+    const form = document.getElementById('attendanceForm');
+    const messageDiv = document.getElementById('message');
 
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
 
-    messageDiv.textContent = "Đang lấy vị trí GPS...";
-    messageDiv.className = "message";
+      messageDiv.textContent = "Đang lấy vị trí GPS...";
+      messageDiv.className = "message";
 
-    if (!navigator.geolocation) {
-      messageDiv.textContent = "Trình duyệt không hỗ trợ định vị GPS.";
-      messageDiv.className = "message error";
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(function(pos) {
-      const lat = pos.coords.latitude.toFixed(6);
-      const lon = pos.coords.longitude.toFixed(6);
-
-      const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse";
-
-      const entryIDs = {
-        name: "entry.1862566201",
-        class: "entry.1185691424",
-        mssv: "entry.1268168706",
-        date: "entry.563044987",
-        period: "entry.1310161689",
-        subject: "entry.722540134",
-        gps: "entry.994526785"
-      };
-
-      const formData = new FormData();
-      formData.append(entryIDs.name, document.getElementById('name').value.trim());
-      formData.append(entryIDs.class, document.getElementById('class').value.trim());
-      formData.append(entryIDs.mssv, document.getElementById('mssv').value.trim());
-      formData.append(entryIDs.date, document.getElementById('date').value);
-      formData.append(entryIDs.period, document.getElementById('period').value);
-      formData.append(entryIDs.subject, document.getElementById('subject').value);
-      formData.append(entryIDs.gps, lat + "," + lon);
-
-      fetch(formURL, {
-        method: "POST",
-        mode: "no-cors",
-        body: formData
-      }).then(() => {
-        messageDiv.textContent = "Điểm danh thành công!";
-        messageDiv.className = "message success";
-        form.reset();
-      }).catch(() => {
-        messageDiv.textContent = "Gửi dữ liệu thất bại, vui lòng thử lại.";
+      if (!navigator.geolocation) {
+        messageDiv.textContent = "Trình duyệt không hỗ trợ định vị GPS.";
         messageDiv.className = "message error";
-      });
+        return;
+      }
 
-    }, function(err) {
-      messageDiv.textContent = "Lỗi lấy vị trí GPS: " + (err.message || "Vui lòng bật định vị");
-      messageDiv.className = "message error";
-    }, {timeout: 10000});
-  });
-</script>
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        const lat = pos.coords.latitude.toFixed(6);
+        const lon = pos.coords.longitude.toFixed(6);
+
+        const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse";
+
+        const entryIDs = {
+          name: "entry.1862566201",
+          class: "entry.1185691424",
+          mssv: "entry.1268168706",
+          date: "entry.563044987",
+          period: "entry.1310161689",
+          subject: "entry.722540134",
+          gps: "entry.994526785"
+        };
+
+        const formData = new FormData();
+        formData.append(entryIDs.name, document.getElementById('name').value.trim());
+        formData.append(entryIDs.class, document.getElementById('class').value.trim());
+        formData.append(entryIDs.mssv, document.getElementById('mssv').value.trim());
+        formData.append(entryIDs.date, document.getElementById('date').value);
+        formData.append(entryIDs.period, document.getElementById('period').value);
+        formData.append(entryIDs.subject, document.getElementById('subject').value);
+        formData.append(entryIDs.gps, lat + "," + lon);
+
+        fetch(formURL, {
+          method: "POST",
+          mode: "no-cors",
+          body: formData
+        }).then(() => {
+          messageDiv.textContent = "Điểm danh thành công!";
+          messageDiv.className = "message success";
+          form.reset();
+        }).catch(() => {
+          messageDiv.textContent = "Gửi dữ liệu thất bại, vui lòng thử lại.";
+          messageDiv.className = "message error";
+        });
+
+      }, function(err) {
+        messageDiv.textContent = "Lỗi lấy vị trí GPS: " + (err.message || "Vui lòng bật định vị");
+        messageDiv.className = "message error";
+      }, {timeout: 10000});
+    });
+  </script>
 
 </body>
 </html>
