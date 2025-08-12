@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Điểm danh GPS</title>
+  <meta charset="UTF-8">
+  <title>Điểm danh GPS</title>
 </head>
 <body>
-<h2>Đang lấy vị trí...</h2>
-<script>
-navigator.geolocation.getCurrentPosition(function(pos) {
-    var lat = pos.coords.latitude;
-    var lon = pos.coords.longitude;
+  <h2>Điểm danh sinh viên</h2>
+  <form id="attendanceForm">
+    <label>Họ và tên:</label><br>
+    <input type="text" id="name" required><br><br>
 
-    // Link form Google (dùng formResponse, không có khoảng trắng hoặc xuống dòng)
-    var formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse";
-    var entryID = "entry.698252806"; // Thay bằng ID câu hỏi Vị trí GPS
+    <label>Mã số sinh viên (MSSV):</label><br>
+    <input type="text" id="mssv" required><br><br>
 
-    var formData = new FormData();
-    formData.append(entryID, lat + "," + lon);
+    <button type="submit">Gửi điểm danh</button>
+  </form>
 
-    // Gửi dữ liệu tới Google Form
-    fetch(formURL, {
-        method: "POST",
-        mode: "no-cors",
-        body: formData
-    }).then(() => {
-        document.body.innerHTML = "<h3>Điểm danh thành công!</h3><p>Vị trí: " + lat + ", " + lon + "</p>";
-    }).catch(() => {
-        document.body.innerHTML = "<h3>Có lỗi khi gửi dữ liệu!</h3>";
+  <script>
+    document.getElementById("attendanceForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        var lat = pos.coords.latitude;
+        var lon = pos.coords.longitude;
+        var formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse";
+        var entryName = "entry.NAME_ID";     // Họ và tên
+        var entryMSSV = "entry.MSSV_ID";     // MSSV
+        var entryGPS = "entry.GPS_ID";       // Vị trí GPS
+
+        var formData = new FormData();
+        formData.append(entryName, document.getElementById("name").value);
+        formData.append(entryMSSV, document.getElementById("mssv").value);
+        formData.append(entryGPS, lat + "," + lon);
+
+        fetch(formURL, {
+          method: "POST",
+          mode: "no-cors",
+          body: formData
+        }).then(() => {
+          document.body.innerHTML = `<h3>Điểm danh thành công!</h3><p>Vị trí: ${lat}, ${lon}</p>`;
+        });
+      }, function() {
+        alert("Không lấy được vị trí. Vui lòng bật định vị!");
+      });
     });
-}, function(err) {
-    document.body.innerHTML = "<h3>Lỗi lấy vị trí. Hãy bật GPS và thử lại.</h3>";
-});
-</script>
+  </script>
 </body>
 </html>
