@@ -2,16 +2,28 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Điểm danh GPS</title>
+  <title>Điểm danh sinh viên DNT</title>
 </head>
 <body>
-  <h2>Điểm danh sinh viên</h2>
+  <h2>Điểm danh sinh viên DNT</h2>
   <form id="attendanceForm">
     <label>Họ và tên:</label><br>
     <input type="text" id="name" required><br><br>
 
-    <label>Mã số sinh viên (MSSV):</label><br>
+    <label>Lớp:</label><br>
+    <input type="text" id="class" required><br><br>
+
+    <label>MSSV:</label><br>
     <input type="text" id="mssv" required><br><br>
+
+    <label>Ngày học:</label><br>
+    <input type="date" id="date" required><br><br>
+
+    <label>Tiết học:</label><br>
+    <input type="number" id="period" min="1" max="12" required><br><br>
+
+    <label>Môn học:</label><br>
+    <input type="text" id="subject" required><br><br>
 
     <button type="submit">Gửi điểm danh</button>
   </form>
@@ -19,17 +31,27 @@
   <script>
     document.getElementById("attendanceForm").addEventListener("submit", function(e) {
       e.preventDefault();
+
       navigator.geolocation.getCurrentPosition(function(pos) {
         var lat = pos.coords.latitude;
         var lon = pos.coords.longitude;
-        var formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse";
-        var entryName = "entry.NAME_ID";     // Họ và tên
-        var entryMSSV = "entry.MSSV_ID";     // MSSV
-        var entryGPS = "entry.GPS_ID";       // Vị trí GPS
+
+        var formURL = "https://docs.google.com/forms/d/e/1FfxQN9iVreS5oVvD2oE-7KAd2iS5Gs_hIf3Aj3KFIzI/formResponse";
+        var entryName = "entry.1234567890";  // Thay bằng Entry ID của câu hỏi "Họ và tên"
+        var entryClass = "entry.2345678901"; // Thay bằng Entry ID của câu hỏi "Lớp"
+        var entryMSSV = "entry.3456789012"; // Thay bằng Entry ID của câu hỏi "MSSV"
+        var entryDate = "entry.4567890123"; // Thay bằng Entry ID của câu hỏi "Ngày học"
+        var entryPeriod = "entry.5678901234"; // Thay bằng Entry ID của câu hỏi "Tiết học"
+        var entrySubject = "entry.6789012345"; // Thay bằng Entry ID của câu hỏi "Môn học"
+        var entryGPS = "entry.7890123456"; // Thay bằng Entry ID của câu hỏi "Vị trí hiện tại"
 
         var formData = new FormData();
         formData.append(entryName, document.getElementById("name").value);
+        formData.append(entryClass, document.getElementById("class").value);
         formData.append(entryMSSV, document.getElementById("mssv").value);
+        formData.append(entryDate, document.getElementById("date").value);
+        formData.append(entryPeriod, document.getElementById("period").value);
+        formData.append(entrySubject, document.getElementById("subject").value);
         formData.append(entryGPS, lat + "," + lon);
 
         fetch(formURL, {
@@ -38,9 +60,12 @@
           body: formData
         }).then(() => {
           document.body.innerHTML = `<h3>Điểm danh thành công!</h3><p>Vị trí: ${lat}, ${lon}</p>`;
+        }).catch(() => {
+          document.body.innerHTML = "<h3>Có lỗi khi gửi dữ liệu!</h3>";
         });
+
       }, function() {
-        alert("Không lấy được vị trí. Vui lòng bật định vị!");
+        alert("Không thể lấy vị trí. Vui lòng bật định vị!");
       });
     });
   </script>
