@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8" />
-<title>Điểm danh sinh viên</title>
+<title>Điểm danh sinh viên</title>  <!-- Tiêu đề trang -->
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -69,7 +69,7 @@
 <body>
 
   <img src="https://raw.githubusercontent.com/trambn268/Check-GPS/main/dng-removebg-preview.png" alt="Logo ĐH Nam Cần Thơ" class="logo" />
-  <h2>Điểm danh sinh viên</h2>
+  <h2>Điểm danh sinh viên</h2>  <!-- Tiêu đề hiển thị -->
 
   <form id="attendanceForm">
     <label for="name">Họ và tên:</label>
@@ -125,17 +125,16 @@
         const lat = pos.coords.latitude.toFixed(6);
         const lon = pos.coords.longitude.toFixed(6);
 
-        const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse
-";
+        const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse";
 
         const entryIDs = {
-          name: "entry.1197727251",
-          class: "entry.1705990907",
-          mssv: "entry.341830251",
-          date: "entry.798107261",
-          period: "entry.1969839115",
-          subject: "entry.808166174",
-          gps: "entry.698252806"
+          name: "entry.1862566201",
+          class: "entry.1185691424",
+          mssv: "entry.1268168706",
+          date: "entry.563044987",
+          period: "entry.1310161689",
+          subject: "entry.722540134",
+          gps: "entry.994526785"
         };
 
         const formData = new FormData();
