@@ -11,20 +11,22 @@ navigator.geolocation.getCurrentPosition(function(pos) {
     var lat = pos.coords.latitude;
     var lon = pos.coords.longitude;
 
-    // Link form Google
+    // Link form Google (dùng formResponse, không có khoảng trắng hoặc xuống dòng)
     var formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse";
-    var entryID = "entry.698252806"; // ID câu hỏi Vị trí GPS
+    var entryID = "entry.698252806"; // Thay bằng ID câu hỏi Vị trí GPS
 
     var formData = new FormData();
     formData.append(entryID, lat + "," + lon);
 
-    // Gửi dữ liệu
+    // Gửi dữ liệu tới Google Form
     fetch(formURL, {
         method: "POST",
         mode: "no-cors",
         body: formData
     }).then(() => {
         document.body.innerHTML = "<h3>Điểm danh thành công!</h3><p>Vị trí: " + lat + ", " + lon + "</p>";
+    }).catch(() => {
+        document.body.innerHTML = "<h3>Có lỗi khi gửi dữ liệu!</h3>";
     });
 }, function(err) {
     document.body.innerHTML = "<h3>Lỗi lấy vị trí. Hãy bật GPS và thử lại.</h3>";
