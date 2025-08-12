@@ -125,8 +125,10 @@
         const lat = pos.coords.latitude.toFixed(6);
         const lon = pos.coords.longitude.toFixed(6);
 
+        // Google Form URL dạng formResponse, thay FORM_ID bằng ID của bạn
         const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng/formResponse";
 
+        // Các entry ID của câu hỏi trên Google Form, bạn phải lấy đúng
         const entryIDs = {
           name: "entry.1862566201",
           class: "entry.1185691424",
@@ -137,6 +139,7 @@
           gps: "entry.994526785"
         };
 
+        // Tạo FormData gửi lên Google Form
         const formData = new FormData();
         formData.append(entryIDs.name, document.getElementById('name').value.trim());
         formData.append(entryIDs.class, document.getElementById('class').value.trim());
@@ -148,9 +151,10 @@
 
         fetch(formURL, {
           method: "POST",
-          mode: "no-cors",
+          mode: "no-cors", // tránh lỗi CORS nhưng không nhận phản hồi
           body: formData
         }).then(() => {
+          // Gửi thành công (giả định)
           messageDiv.textContent = "Điểm danh thành công!";
           messageDiv.className = "message success";
           form.reset();
@@ -168,4 +172,3 @@
 
 </body>
 </html>
-
