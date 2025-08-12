@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Điểm danh GPS</title>
+</head>
+<body>
+<h2>Đang lấy vị trí...</h2>
+<script>
+navigator.geolocation.getCurrentPosition(function(pos) {
+    var lat = pos.coords.latitude;
+    var lon = pos.coords.longitude;
+
+    // Link form Google
+    var formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfcq5NlcENT1g1aVkTT9t0aQj-phEtT1VfgFR6xKQdg4t1-ng
+/formResponse";
+    var entryID = "entry.698252806"; // ID câu hỏi Vị trí GPS
+
+    var formData = new FormData();
+    formData.append(entryID, lat + "," + lon);
+
+    // Gửi dữ liệu
+    fetch(formURL, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+    }).then(() => {
+        document.body.innerHTML = "<h3>Điểm danh thành công!</h3><p>Vị trí: " + lat + ", " + lon + "</p>";
+    });
+}, function(err) {
+    document.body.innerHTML = "<h3>Lỗi lấy vị trí. Hãy bật GPS và thử lại.</h3>";
+});
+</script>
+</body>
+</html>
